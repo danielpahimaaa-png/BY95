@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BY 95 — Home</title>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- וידאו רקע -->
+  <video class="bg-video" autoplay muted loop playsinline>
+    <source src="REkaAtar2.mp4" type="video/mp4">
+  </video>
+
+  <main class="page">
+
+    <!-- ROOM -->
+    <div class="photo p-room photo-trigger" data-folder="gallery2" data-count="15">
+      <img src="images/room.jpg" alt="">
+    </div>
+
+    <!-- KITCHEN -->
+    <div class="photo p-kitchen photo-trigger" data-folder="gallery9" data-count="10">
+      <img src="images/kitchen.jpg" alt="">
+    </div>
+
+    <!-- BEAUTY -->
+    <div class="photo p-beauty photo-trigger" data-folder="gallery" data-count="31">
+      <img src="images/beauty.jpg" alt="">
+    </div>
+
+    <!-- TABLE -->
+    <div class="photo p-table photo-trigger" data-folder="gallery4" data-count="8">
+      <img src="images/table.jpg" alt="">
+    </div>
+
+   <!-- SMALL -->
+<div class="photo p-small photo-trigger" data-folder="gallery8" data-count="9" data-scale="1.6">
+  <img src="images/small.jpg" alt="">
+</div>
+
+    <!-- KIDS -->
+    <div class="photo p-kids photo-trigger" data-folder="gallery6" data-count="9">
+      <img src="images/kids.jpg" alt="">
+    </div>
+
+    <!-- GROUP -->
+    <div class="photo p-group photo-trigger" data-folder="gallery3" data-count="10">
+      <img src="images/group.jpg" alt="">
+    </div>
+
+    <!-- PORTRAIT -->
+    <div class="photo p-portrait photo-trigger" data-folder="gallery7" data-count="13">
+      <img src="images/portrait.jpg" alt="">
+    </div>
+
+    <!-- BAG -->
+    <div class="photo p-bag photo-trigger" data-folder="gallery5" data-count="11">
+      <img src="images/bag.jpg" alt="">
+    </div>
+
+    <!-- לוגו -->
+    <section class="center-logo">
+      <div class="text">HOME <span>(studio?)</span></div>
+
+      <div class="mark-wrap">
+        <img src="images/logo95.png" class="logo-img" alt="BY95 logo">
+      </div>
+
+      <div class="text">WELCOME TO</div>
+    </section>
+
+  </main>
+
+  <!-- חלונות -->
+  <div class="pop-windows"></div>
+
+  <script>
+    const triggers = document.querySelectorAll(".photo-trigger");
+    const windows = document.querySelector(".pop-windows");
+
+    triggers.forEach(trigger => {
+      trigger.addEventListener("click", () => {
+        const folder = trigger.dataset.folder;
+        const count = Number(trigger.dataset.count);
+        const scale = Number(trigger.dataset.scale || 1);
+
+        windows.classList.add("active");
+
+        const rect = trigger.getBoundingClientRect();
+        const startX = rect.left;
+        const startY = rect.top;
+        const imageWidth = rect.width * scale;
+
+        const createdImages = [];
+
+        for (let i = 1; i <= count; i++) {
+          const img = document.createElement("img");
+
+          img.src = `images/${folder}/${i}.jpg`;
+          img.classList.add("pop-img");
+
+        let directionX = 1;
+let directionY = 1;
+
+/* kids */
+if (folder === "gallery6") {
+    directionX = 1;
+    directionY = -1;
+}
+
+/* portrait */
+if (folder === "gallery7") {
+    directionX = -1;
+    directionY = -1;
+}
+
+const offsetX =
+(i - 1) * 8 * directionX;
+
+const offsetY =
+(i - 1) * 5 * directionY;
+
+          img.style.left = `${startX + offsetX}px`;
+          img.style.top = `${startY + offsetY}px`;
+          img.style.width = `${imageWidth}px`;
+          img.style.zIndex = Date.now() + i;
+          img.style.animationDelay = `${i * 0.5}s`;
+
+          windows.appendChild(img);
+          createdImages.push(img);
+        }
+
+        /* אחרי שכל התמונות נפתחו — הן מתחילות להיעלם רנדומלית */
+        const allImagesOpenedTime = count * 500 + 900;
+
+        setTimeout(() => {
+          createdImages
+            .sort(() => Math.random() - 0.5)
+            .forEach((img, index) => {
+              setTimeout(() => {
+                img.classList.add("hide-pop-img");
+
+                setTimeout(() => {
+                  img.remove();
+                }, 300);
+
+              }, index * 250 + Math.random() * 700);
+            });
+        }, allImagesOpenedTime);
+      });
+    });
+  </script>
+
+</body>
+</html>
